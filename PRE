@@ -1,0 +1,23 @@
+#!/bin/sh
+name=serposcope
+id=5379
+home=/usr/local
+log=/var/log
+db=/var/db
+folders="$home $log $db"
+
+echo "Creating group '${name}' with id '${id}'"
+pw groupadd -q -n $name -g $id
+echo "Creating user '${name}' with id '${id}' with home at '$home/$name'"
+pw useradd -q -n $name -g $name -u $id -m $home/$name -s /bin/sh
+echo "Setting up folders"
+for f in $folders
+do
+    if [ ! -d $f/$name ]; then
+        echo "Making folder $f/$name"
+        mkdir $f/$name
+        chown $name:$name $f/$name
+    fi
+done
+echo "Fetching serposcope.jar"
+echo fetch https://serposcope.serphacker.com/download/2.11.0/serposcope-2.11.0.jar -o $home/$name/serposcope.jar

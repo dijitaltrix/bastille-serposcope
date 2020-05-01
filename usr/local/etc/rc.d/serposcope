@@ -1,0 +1,22 @@
+#!/bin/sh
+
+. /etc/rc.subr
+
+name="serposcope"
+rcvar="serposcope_enable"
+
+: ${serposcope_enable:=NO}
+: ${serposcope_user:=serposcope}
+: ${serposcope_group:=serposcope}
+: ${serposcope_chdir=/usr/local/serposcope}
+
+start_cmd="serposcope_start"
+
+
+serposcope_start()
+{
+    su -l serposcope /usr/local/bin/java -Dserposcope.conf=/usr/local/etc/serposcope.conf -jar /usr/local/serposcope/serposcope.jar &
+}
+
+load_rc_config $name
+run_rc_command "$1"
